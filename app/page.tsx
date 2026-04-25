@@ -6,6 +6,7 @@ import { ReportScreen } from '@/components/screens/report';
 import { RouteScreen } from '@/components/screens/route';
 import { NavigateScreen, type NearReport } from '@/components/screens/navigate';
 import { PromptOverlay } from '@/components/screens/prompt';
+import { ArriveScreen } from '@/components/screens/arrive';
 
 type Screen = 'home' | 'report' | 'route' | 'navigate' | 'arrive';
 
@@ -113,18 +114,11 @@ export default function Page() {
           )}
         </>
       )}
-      {state.screen === 'arrive' && (
-        <ArriveStub onDone={() => goto('home')} />
-      )}
+      {state.screen === 'arrive' && state.activeRouteId && (() => {
+        const active = state.routes.find((r) => r.id === state.activeRouteId);
+        if (!active) return null;
+        return <ArriveScreen activeRoute={active} mode={state.mode} onDone={() => goto('home')} />;
+      })()}
     </main>
-  );
-}
-
-function ArriveStub({ onDone }: { onDone: () => void }) {
-  return (
-    <div className="p-6">
-      <h1 className="display text-2xl">Arrive (stub)</h1>
-      <button className="m-2 underline" onClick={onDone}>Done</button>
-    </div>
   );
 }
