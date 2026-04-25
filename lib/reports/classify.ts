@@ -106,11 +106,20 @@ export async function classifyReport(transcript: string): Promise<Classification
     .trim();
 
   const json = text.replace(/^```(?:json)?/i, '').replace(/```$/, '').trim();
-  const parsed = JSON.parse(json) as Partial<SafetyClassification & IrrelevantClassification>;
+  const parsed = JSON.parse(json) as {
+    type?: string;
+    severity?: string;
+    summary?: string;
+    reason?: string;
+  };
 
   // Defensive validation — model can drift.
   const allowedTypes = ['acute', 'environmental', 'positive', 'irrelevant'] as const;
-  if (!parsed.type || !allowedTypes.includes(parsed.type)) {
+  type AllowedType = (typeof allowedTypes)[number];
+  const isAllowed = (t: unknown): t is AllowedType =>
+    typeof t === 'string' && (allowedTypes as readonly string[]).includes(t);
+
+  if (!isAllowed(parsed.type)) {
     return {
       type: 'irrelevant',
       reason: `Could not classify (model returned type=${parsed.type ?? 'undefined'})`,
