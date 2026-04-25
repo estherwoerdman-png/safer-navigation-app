@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import type { Map as MbMap } from 'mapbox-gl';
 import { MapView } from '@/components/map/map-view';
 import { ReportPins, type Pin } from '@/components/map/report-pins';
+import { UserLocationDot } from '@/components/map/user-location-dot';
 import { SearchField } from '@/components/ui/search-field';
 import { ReportsNearbyBadge } from '@/components/ui/reports-nearby-badge';
 import { ReportDetailSheet } from '@/components/ui/report-detail-sheet';
@@ -97,6 +98,7 @@ export function HomeScreen({
     <div className="absolute inset-0">
       <MapView className="absolute inset-0" onReady={setMap} />
       <ReportPins map={map} pins={pins} onPinClick={setClickedReportId} />
+      <UserLocationDot map={map} position={initialPosition} />
 
       <div className="absolute top-3 left-3 right-3">
         <SearchField

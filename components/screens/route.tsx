@@ -5,6 +5,7 @@ import type { Map as MbMap } from 'mapbox-gl';
 import { MapView } from '@/components/map/map-view';
 import { ReportPins, type Pin } from '@/components/map/report-pins';
 import { RouteLine } from '@/components/map/route-line';
+import { UserLocationDot } from '@/components/map/user-location-dot';
 import { BottomSheet } from '@/components/ui/bottom-sheet';
 import { getVoice } from '@/lib/voice';
 import type { RouteResponse, Coord } from '@/app/page';
@@ -71,6 +72,7 @@ export function RouteScreen({
       <MapView className="absolute inset-0" onReady={setMap} />
       <ReportPins map={map} pins={pins} />
       <RouteLine map={map} routes={drawn} />
+      <UserLocationDot map={map} position={origin} />
 
       <BottomSheet>
         {error && <p className="text-[var(--sev-acute)]">No routes available — try again.</p>}

@@ -5,6 +5,7 @@ import type { Map as MbMap } from 'mapbox-gl';
 import { MapView } from '@/components/map/map-view';
 import { ReportPins, type Pin } from '@/components/map/report-pins';
 import { RouteLine } from '@/components/map/route-line';
+import { UserLocationDot } from '@/components/map/user-location-dot';
 import { getVoice } from '@/lib/voice';
 import type { Coord, RouteResponse } from '@/app/page';
 
@@ -164,6 +165,7 @@ export function NavigateScreen({
       <MapView className="absolute inset-0" onReady={setMap} />
       <ReportPins map={map} pins={pins} />
       <RouteLine map={map} routes={drawn} />
+      <UserLocationDot map={map} position={pos} />
 
       <div
         className="absolute top-3 left-3 right-3 bg-white/95 rounded-2xl px-4 py-3

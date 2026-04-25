@@ -23,6 +23,9 @@
   --sev-high:   #d8843a;
   --sev-acute:  #c44a3e;
 
+  /* User location */
+  --location-dot: #2e7df0;
+
   /* Map cartography */
   --map-land:        #f0e9d6;
   --map-block:       #e6dec8;
