@@ -112,7 +112,11 @@ export function RouteScreen({
             <span className="text-sm">Bike</span>
           </button>
         </div>
-        {error && <p className="text-[var(--sev-acute)]">No routes available — try again.</p>}
+        {error && (
+          <p className="text-[var(--sev-acute)]">
+            Couldn&rsquo;t find a route there — try a different destination.
+          </p>
+        )}
         {!error && !active && (
           <div className="flex items-center gap-3 py-1">
             <span className="text-[var(--ink-3)]">Finding the safest route</span>
@@ -142,6 +146,9 @@ export function RouteScreen({
                 min · {(active.distance_m / 1000).toFixed(1)} km
               </span>
             </div>
+            <p className="text-sm text-[var(--ink-3)] mt-1">
+              Arrive at {new Date(Date.now() + active.duration_min * 60_000).toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' })}
+            </p>
             <ul className="text-sm text-[var(--ink-2)] mt-3 space-y-1">
               {active.reasons.map((r, i) => <li key={i}>· {r}</li>)}
             </ul>

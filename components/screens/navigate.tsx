@@ -220,7 +220,7 @@ export function NavigateScreen({
       <UserLocationDot map={map} position={pos} />
 
       <div
-        className="absolute top-3 left-3 right-3 bg-white/95 rounded-2xl px-4 py-3
+        className="absolute top-3 left-16 right-16 bg-[var(--card)]/95 rounded-2xl px-4 py-3
                       shadow-md flex items-center justify-between backdrop-blur"
       >
         <div>
@@ -230,8 +230,8 @@ export function NavigateScreen({
             </span>
             <span className="text-sm text-[var(--ink-3)]">min</span>
           </div>
-          <div className="text-xs text-[var(--ink-3)] mt-1">
-            safety score {active?.safety_score.toFixed(2) ?? '—'}
+          <div className="text-sm text-[var(--ink-3)] mt-1">
+            Arrive at {active ? new Date(Date.now() + active.duration_min * 60_000).toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' }) : '—'}
           </div>
         </div>
         <button onClick={onCancel} className="text-[var(--sev-acute)] text-sm">

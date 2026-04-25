@@ -37,3 +37,36 @@
   --map-text:        #6b665a;
   --sky:             #f5f1e8;
 }
+
+[data-theme="dark"] {
+  --ink:        #f5f1e8;
+  --ink-2:      #d8d3c2;
+  --ink-3:      #a8a298;
+  --ink-4:      #6e6960;
+
+  --paper:      #1a1815;
+  --paper-2:    #252220;
+  --card:       #2b2825;
+
+  --primary:    #6b9c5e;
+  --primary-2:  #5a8a4f;
+  --primary-3:  #3e5e4b;
+  --accent:     #d4814f;
+
+  --sev-low:    #6b9c5e;
+  --sev-mid:    #d8b34a;
+  --sev-high:   #d8843a;
+  --sev-acute:  #d65a4f;
+
+  --location-dot: #5a9df0;
+
+  --map-land:        #2b2825;
+  --map-block:       #1a1815;
+  --map-water:       #2a3d4d;
+  --map-park:        #2d3e2a;
+  --map-road:        #4a4540;
+  --map-road-edge:   #3a3530;
+  --map-bridge:      #d4814f;
+  --map-text:        #a8a298;
+  --sky:             #1a1815;
+}
