@@ -5,6 +5,7 @@ import { HomeScreen } from '@/components/screens/home';
 import { ReportScreen } from '@/components/screens/report';
 import { RouteScreen } from '@/components/screens/route';
 import { NavigateScreen, type NearReport } from '@/components/screens/navigate';
+import { PromptOverlay } from '@/components/screens/prompt';
 
 type Screen = 'home' | 'report' | 'route' | 'navigate' | 'arrive';
 
@@ -88,19 +89,29 @@ export default function Page() {
         />
       )}
       {state.screen === 'navigate' && state.origin && state.destination && state.activeRouteId && (
-        <NavigateScreen
-          origin={state.origin}
-          destination={state.destination}
-          mode={state.mode}
-          routes={state.routes}
-          activeRouteId={state.activeRouteId}
-          onArrive={() => goto('arrive')}
-          onCancel={() => goto('home')}
-          onPromptOpen={(r) => setState((s) => ({ ...s, activePrompt: r }))}
-          onActiveRouteChange={(rs, id) =>
-            setState((s) => ({ ...s, routes: rs, activeRouteId: id }))
-          }
-        />
+        <>
+          <NavigateScreen
+            origin={state.origin}
+            destination={state.destination}
+            mode={state.mode}
+            routes={state.routes}
+            activeRouteId={state.activeRouteId}
+            onArrive={() => goto('arrive')}
+            onCancel={() => goto('home')}
+            onPromptOpen={(r) => setState((s) => ({ ...s, activePrompt: r }))}
+            onActiveRouteChange={(rs, id) =>
+              setState((s) => ({ ...s, routes: rs, activeRouteId: id }))
+            }
+          />
+          {state.activePrompt && state.origin && (
+            <PromptOverlay
+              report={state.activePrompt}
+              position={state.origin}
+              onClose={() => setState((s) => ({ ...s, activePrompt: null }))}
+              onCounted={() => { /* count is tracked inside NavigateScreen on prompt open */ }}
+            />
+          )}
+        </>
       )}
       {state.screen === 'arrive' && (
         <ArriveStub onDone={() => goto('home')} />
