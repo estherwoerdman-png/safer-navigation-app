@@ -1,0 +1,36 @@
+/* app/styles/tokens.css */
+:root {
+  /* Ink (text) */
+  --ink:        #1a1a1a;
+  --ink-2:      #2b2b2b;
+  --ink-3:      #5b5852;
+  --ink-4:      #8a857c;
+
+  /* Paper (background) — warm cream, NOT cold white */
+  --paper:      #f5f1e8;
+  --paper-2:    #ece6d6;
+  --card:       #ffffff;
+
+  /* Brand */
+  --primary:    #2f4a3a;
+  --primary-2:  #3e5e4b;
+  --primary-3:  #c8d4cc;
+  --accent:     #c2693e;
+
+  /* Severity */
+  --sev-low:    #6b9c5e;
+  --sev-mid:    #d8b34a;
+  --sev-high:   #d8843a;
+  --sev-acute:  #c44a3e;
+
+  /* Map cartography */
+  --map-land:        #f0e9d6;
+  --map-block:       #e6dec8;
+  --map-water:       #b8cfd6;
+  --map-park:        #cfdbb8;
+  --map-road:        #ffffff;
+  --map-road-edge:   #e0d6bd;
+  --map-bridge:      #c2693e;
+  --map-text:        #6b665a;
+  --sky:             #f5f1e8;
+}
