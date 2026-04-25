@@ -112,7 +112,11 @@ export function RouteScreen({
             <span className="text-sm">Bike</span>
           </button>
         </div>
-        {error && <p className="text-[var(--sev-acute)]">No routes available — try again.</p>}
+        {error && (
+          <p className="text-[var(--sev-acute)]">
+            Couldn&rsquo;t find a route there — try a different destination.
+          </p>
+        )}
         {!error && !active && (
           <div className="flex items-center gap-3 py-1">
             <span className="text-[var(--ink-3)]">Finding the safest route</span>
