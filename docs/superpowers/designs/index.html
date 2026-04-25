@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Safe Routes — Amsterdam</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+<style>
+  :root {
+    /* Palette — warm, calm, protective. Not Source admin-y, not panic-y. */
+    --ink:        #1a1a1a;
+    --ink-2:      #2b2b2b;
+    --ink-3:      #5b5852;
+    --ink-4:      #8a857c;
+    --paper:      #f5f1e8;       /* warm cream */
+    --paper-2:    #ece6d6;
+    --card:       #ffffff;
+
+    /* Primary = deep forest. Trustworthy, not gendered, not alarming. */
+    --primary:    #2f4a3a;
+    --primary-2:  #3e5e4b;
+    --primary-3:  #c8d4cc;
+    --accent:     #c2693e;       /* burnt amber for action / report */
+
+    /* Severity — traffic light, but desaturated to feel calm */
+    --sev-low:    #6b9c5e;
+    --sev-mid:    #d8b34a;
+    --sev-high:   #d8843a;
+    --sev-acute:  #c44a3e;
+
+    /* Time-of-day tints (set on root) */
+    --map-land:   #f0e9d6;
+    --map-block:  #e6dec8;
+    --map-water:  #b8cfd6;
+    --map-park:   #cfdbb8;
+    --map-road:   #ffffff;
+    --map-road-edge: #e0d6bd;
+    --map-bridge: #c2693e;
+    --map-text:   #6b665a;
+    --sky:        #f5f1e8;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: var(--ink);
+    background: #1f1d18;
+    min-height: 100vh;
+    overflow: hidden;
+  }
+
+  #root { min-height: 100vh; }
+
+  .stage {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse at top, #2a2723 0%, #14130f 70%);
+  }
+
+  /* common type */
+  .display { font-family: 'Fraunces', Georgia, serif; font-weight: 500; letter-spacing: -0.01em; }
+
+  button { font-family: inherit; }
+
+  /* iOS frame removes scroll on inner area but we want our screens scrollable freely */
+  .screen-host {
+    position: absolute; inset: 0;
+    overflow: hidden;
+  }
+</style>
+</head>
+<body>
+
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="ios-frame.jsx"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="src/icons.jsx"></script>
+<script type="text/babel" src="src/map.jsx"></script>
+<script type="text/babel" src="src/screens-home.jsx"></script>
+<script type="text/babel" src="src/screens-report.jsx"></script>
+<script type="text/babel" src="src/screens-route.jsx"></script>
+<script type="text/babel" src="src/screens-nav.jsx"></script>
+<script type="text/babel" src="src/screens-prompt.jsx"></script>
+<script type="text/babel" src="src/screens-arrive.jsx"></script>
+<script type="text/babel" src="src/app.jsx"></script>
+
+</body>
+</html>
