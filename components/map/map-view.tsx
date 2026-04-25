@@ -52,9 +52,14 @@ export function MapView({
 
   useEffect(() => {
     if (!ref.current || mapRef.current) return;
+    const isDark =
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-color-scheme: dark)').matches;
     const m = new mapboxgl.Map({
       container: ref.current,
-      style: 'mapbox://styles/mapbox/light-v11',
+      style: isDark
+        ? 'mapbox://styles/mapbox/dark-v11'
+        : 'mapbox://styles/mapbox/light-v11',
       center: AMSTERDAM_CENTER,
       zoom: 13,
       attributionControl: false,
