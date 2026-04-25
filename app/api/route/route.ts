@@ -9,6 +9,7 @@ import {
   type ReportLite,
   type RouteFeedbackOverlap,
 } from '@/lib/routing/score';
+import { generateReasons, type RouteContext } from '@/lib/routing/generate-reasons';
 
 type ReqBody = {
   origin: { lat: number; lng: number };
@@ -101,41 +102,66 @@ export async function POST(req: NextRequest) {
     e.scored.safetyScore + e.feedback.feedbackScore;
   const ranked = [...enriched].sort((a, b) => totalScore(a) - totalScore(b));
 
-  const responseRoutes = ranked.map((rt) => {
-    const reasons: string[] = [];
+  // Build per-route context for the LLM-generated reasons (fired in parallel
+  // with template construction; we pick whichever pans out).
+  const contexts: RouteContext[] = ranked.map((rt, idx) => {
+    const litQuietMeters = rt.feedback.scored
+      .filter((s) => s.rating === 'lit_quiet')
+      .reduce((sum, s) => sum + s.overlapMeters, 0);
+    const unsafeRatedMeters = rt.feedback.scored
+      .filter((s) => s.rating === 'avoid' || s.rating === 'acute')
+      .reduce((sum, s) => sum + s.overlapMeters, 0);
+    const topReports = [...rt.scored.scored]
+      .filter((s) => Math.abs(s.score) > 0)
+      .sort((a, b) => Math.abs(b.score) - Math.abs(a.score))
+      .slice(0, 3)
+      .map((s) => ({ type: s.type, severity: s.severity, summary: s.summary }));
+    return {
+      id: rt.id,
+      rank: idx,
+      duration_min: Math.round(rt.durationSec / 60),
+      distance_m: rt.distanceM,
+      topReports,
+      litQuietMeters: Math.round(litQuietMeters),
+      unsafeRatedMeters: Math.round(unsafeRatedMeters),
+    };
+  });
 
-    // Lead with rated-polyline insight if it materially affected the score.
+  const llmReasons = await generateReasons(contexts);
+
+  const responseRoutes = ranked.map((rt) => {
+    // Compute template reasons up-front as the fallback path.
+    const templateReasons: string[] = [];
     const litMeters = rt.feedback.scored
       .filter((s) => s.rating === 'lit_quiet')
       .reduce((sum, s) => sum + s.overlapMeters, 0);
     const negativeMeters = rt.feedback.scored
       .filter((s) => s.rating === 'avoid' || s.rating === 'acute')
       .reduce((sum, s) => sum + s.overlapMeters, 0);
-
     if (litMeters >= 100) {
-      reasons.push(
+      templateReasons.push(
         `follows ${Math.round(litMeters)}m others rated as well-lit and quiet`,
       );
     }
     if (negativeMeters >= 100) {
-      reasons.push(
+      templateReasons.push(
         `passes through ${Math.round(negativeMeters)}m others rated as unsafe`,
       );
     }
-
-    // Then the top per-report contributors.
     const top = [...rt.scored.scored]
-      .filter((s) => s.score > 0) // skip positive-report contributors here; their reasons are covered above
+      .filter((s) => s.score > 0)
       .sort((a, b) => b.score - a.score)
       .slice(0, 2);
     for (const r of top) {
-      reasons.push(
+      templateReasons.push(
         `avoids ${r.type === 'acute' ? 'acute' : 'environmental'} report: ${r.summary}`,
       );
     }
-    if (reasons.length === 0) {
-      reasons.push('no reported incidents along this path');
+    if (templateReasons.length === 0) {
+      templateReasons.push('no reported incidents along this path');
     }
+
+    const reasons = llmReasons?.get(rt.id) ?? templateReasons;
 
     return {
       id: rt.id,
