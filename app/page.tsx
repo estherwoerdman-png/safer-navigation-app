@@ -4,6 +4,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { HomeScreen } from '@/components/screens/home';
 import { ReportScreen } from '@/components/screens/report';
 import { RouteScreen } from '@/components/screens/route';
+import { NavigateScreen, type NearReport } from '@/components/screens/navigate';
 
 type Screen = 'home' | 'report' | 'route' | 'navigate' | 'arrive';
 
@@ -26,6 +27,7 @@ export type AppState = {
   routes: RouteResponse[];
   activeRouteId: string | null;
   mode: 'walking' | 'cycling';
+  activePrompt: NearReport | null;
 };
 
 export default function Page() {
@@ -36,6 +38,7 @@ export default function Page() {
     routes: [],
     activeRouteId: null,
     mode: 'walking',
+    activePrompt: null,
   });
 
   const [pos, setPos] = useState<Coord | null>(null);
@@ -84,8 +87,20 @@ export default function Page() {
           onCancel={() => goto('home')}
         />
       )}
-      {state.screen === 'navigate' && (
-        <NavigateStub onArrive={() => goto('arrive')} onCancel={() => goto('home')} />
+      {state.screen === 'navigate' && state.origin && state.destination && state.activeRouteId && (
+        <NavigateScreen
+          origin={state.origin}
+          destination={state.destination}
+          mode={state.mode}
+          routes={state.routes}
+          activeRouteId={state.activeRouteId}
+          onArrive={() => goto('arrive')}
+          onCancel={() => goto('home')}
+          onPromptOpen={(r) => setState((s) => ({ ...s, activePrompt: r }))}
+          onActiveRouteChange={(rs, id) =>
+            setState((s) => ({ ...s, routes: rs, activeRouteId: id }))
+          }
+        />
       )}
       {state.screen === 'arrive' && (
         <ArriveStub onDone={() => goto('home')} />
@@ -94,15 +109,6 @@ export default function Page() {
   );
 }
 
-function NavigateStub({ onArrive, onCancel }: { onArrive: () => void; onCancel: () => void }) {
-  return (
-    <div className="p-6">
-      <h1 className="display text-2xl">Navigate (stub)</h1>
-      <button className="m-2 underline" onClick={onArrive}>Mock arrive</button>
-      <button className="m-2 underline" onClick={onCancel}>Cancel</button>
-    </div>
-  );
-}
 function ArriveStub({ onDone }: { onDone: () => void }) {
   return (
     <div className="p-6">
