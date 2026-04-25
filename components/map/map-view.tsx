@@ -53,8 +53,8 @@ export function MapView({
   useEffect(() => {
     if (!ref.current || mapRef.current) return;
     const isDark =
-      typeof window !== 'undefined' &&
-      window.matchMedia('(prefers-color-scheme: dark)').matches;
+      typeof document !== 'undefined' &&
+      document.documentElement.dataset.theme === 'dark';
     const m = new mapboxgl.Map({
       container: ref.current,
       style: isDark
