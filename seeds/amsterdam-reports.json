@@ -1,0 +1,398 @@
+[
+  {
+    "lat": 52.3791,
+    "lng": 4.9001,
+    "transcript": "I always speed up through the bicycle tunnel under Centraal at night. The lighting flickers and there are usually a couple of guys hanging around the bend where you can't see what's coming.",
+    "type": "environmental",
+    "severity": "medium",
+    "summary": "Bicycle tunnel under Centraal felt unsafe at night",
+    "hours_ago": 2
+  },
+  {
+    "lat": 52.3793,
+    "lng": 4.8995,
+    "transcript": "Cycling out of the IJ-side tunnel around midnight, a man whistled and tried to grab my handlebar. I didn't stop. Heart pounded the whole way home.",
+    "type": "acute",
+    "severity": "high",
+    "summary": "Man tried to grab a cyclist's handlebar leaving Centraal tunnel",
+    "hours_ago": 14
+  },
+  {
+    "lat": 52.3789,
+    "lng": 4.9008,
+    "transcript": "Tunnel near Centraal is fine in rush hour but after 11pm it smells like piss and there are no cameras working. I avoid it now.",
+    "type": "environmental",
+    "severity": "low",
+    "summary": "Centraal bike tunnel feels neglected and unsafe after 11pm",
+    "hours_ago": 30
+  },
+  {
+    "lat": 52.3884,
+    "lng": 4.8378,
+    "transcript": "Walking from the Sloterdijk platforms down to the bus stop, the underpass was completely empty and one of the lights was broken. A man was just standing in the corner staring.",
+    "type": "environmental",
+    "severity": "high",
+    "summary": "Man loitered in a broken-lit Sloterdijk underpass",
+    "hours_ago": 1
+  },
+  {
+    "lat": 52.3879,
+    "lng": 4.8385,
+    "transcript": "Sloterdijk passage is genuinely scary at night. Long, narrow, no exits. I sprint through it.",
+    "type": "environmental",
+    "severity": "low",
+    "summary": "Sloterdijk passage felt long, narrow and exposed",
+    "hours_ago": 18
+  },
+  {
+    "lat": 52.3881,
+    "lng": 4.8372,
+    "transcript": "Group of guys catcalling everyone walking off the train at Sloterdijk last night. Staff didn't intervene.",
+    "type": "acute",
+    "severity": "medium",
+    "summary": "Group catcalled commuters leaving Sloterdijk station",
+    "hours_ago": 22
+  },
+  {
+    "lat": 52.3122,
+    "lng": 4.9461,
+    "transcript": "Bijlmer ArenA exit at 1am: the escalators were off, half the lights flicker. Someone followed me down the stairs and only stopped when I went into the AH To Go.",
+    "type": "acute",
+    "severity": "high",
+    "summary": "Followed down the stairs at Bijlmer ArenA exit",
+    "hours_ago": 5
+  },
+  {
+    "lat": 52.3118,
+    "lng": 4.9468,
+    "transcript": "Bijlmer station area is so badly lit. The square between the metro and the parking is dead empty after 10pm.",
+    "type": "environmental",
+    "severity": "low",
+    "summary": "Bijlmer station square felt dead and badly lit after 10pm",
+    "hours_ago": 36
+  },
+  {
+    "lat": 52.3128,
+    "lng": 4.9455,
+    "transcript": "Two guys aggressively tried to sell me something near Bijlmer station, blocked my path until a tram pulled in.",
+    "type": "acute",
+    "severity": "medium",
+    "summary": "Two men blocked a woman's path near Bijlmer station",
+    "hours_ago": 48
+  },
+  {
+    "lat": 52.3742,
+    "lng": 4.8951,
+    "transcript": "Damrak after the bars close is just a corridor of drunk guys yelling. Felt like I was being assessed every few steps.",
+    "type": "environmental",
+    "severity": "low",
+    "summary": "Damrak after closing felt like a gauntlet of drunk men",
+    "hours_ago": 9
+  },
+  {
+    "lat": 52.3739,
+    "lng": 4.8948,
+    "transcript": "A guy grabbed my arm on Damrak around 3am. He let go when I shouted but no one nearby reacted.",
+    "type": "acute",
+    "severity": "high",
+    "summary": "Stranger grabbed a woman's arm on Damrak at 3am",
+    "hours_ago": 26
+  },
+  {
+    "lat": 52.3746,
+    "lng": 4.8956,
+    "transcript": "Damrak is fine but the side alleys off it are pitch black. I always stick to the tram side.",
+    "type": "environmental",
+    "severity": "low",
+    "summary": "Side alleys off Damrak felt pitch black at night",
+    "hours_ago": 60
+  },
+  {
+    "lat": 52.3711,
+    "lng": 4.8902,
+    "transcript": "Walked down Spuistraat after a late shift and a man followed me from the corner of Raadhuisstraat almost to my door. Pretended to make a phone call until he turned off.",
+    "type": "acute",
+    "severity": "high",
+    "summary": "Followed by a man on Spuistraat for several blocks",
+    "hours_ago": 3
+  },
+  {
+    "lat": 52.3708,
+    "lng": 4.8898,
+    "transcript": "Spuistraat at night is too quiet, only the bars at the south end have any life. The middle stretch always feels off.",
+    "type": "environmental",
+    "severity": "low",
+    "summary": "Middle stretch of Spuistraat felt too quiet at night",
+    "hours_ago": 28
+  },
+  {
+    "lat": 52.3714,
+    "lng": 4.8906,
+    "transcript": "Two men fighting outside a bar on Spuistraat, glass everywhere. I crossed to the other side.",
+    "type": "acute",
+    "severity": "medium",
+    "summary": "Fight broke out outside a bar on Spuistraat",
+    "hours_ago": 41
+  },
+  {
+    "lat": 52.3661,
+    "lng": 4.8943,
+    "transcript": "Reguliersbreestraat between the cinema and Rembrandtplein is rough on weekends. Shoved twice in five minutes by drunk groups.",
+    "type": "environmental",
+    "severity": "low",
+    "summary": "Reguliersbreestraat felt aggressive and crowded on weekend nights",
+    "hours_ago": 11
+  },
+  {
+    "lat": 52.3664,
+    "lng": 4.8949,
+    "transcript": "A guy on Reguliersbreestraat exposed himself to me near the corner. Walked off laughing when I yelled.",
+    "type": "acute",
+    "severity": "high",
+    "summary": "Man indecently exposed himself on Reguliersbreestraat",
+    "hours_ago": 33
+  },
+  {
+    "lat": 52.3658,
+    "lng": 4.8939,
+    "transcript": "The smoke shops on Reguliersbreestraat get a lot of weird foot traffic late. I don't make eye contact.",
+    "type": "environmental",
+    "severity": "low",
+    "summary": "Late-night foot traffic on Reguliersbreestraat felt sketchy",
+    "hours_ago": 54
+  },
+  {
+    "lat": 52.3722,
+    "lng": 4.9003,
+    "transcript": "Walking across Nieuwmarkt at 2am, three men started following me asking where I lived. Ducked into a hotel lobby.",
+    "type": "acute",
+    "severity": "high",
+    "summary": "Three men asked where she lived and followed her at Nieuwmarkt",
+    "hours_ago": 4
+  },
+  {
+    "lat": 52.3719,
+    "lng": 4.8996,
+    "transcript": "Nieuwmarkt itself is fine but the alleys to Zeedijk are not. Always a few guys in dark hoodies who watch you pass.",
+    "type": "environmental",
+    "severity": "low",
+    "summary": "Alleys from Nieuwmarkt to Zeedijk felt watched at night",
+    "hours_ago": 25
+  },
+  {
+    "lat": 52.3725,
+    "lng": 4.9008,
+    "transcript": "A man relieved himself in plain sight by the De Waag and then started shouting at women crossing the square.",
+    "type": "acute",
+    "severity": "medium",
+    "summary": "Man harassed women near De Waag at Nieuwmarkt",
+    "hours_ago": 47
+  },
+  {
+    "lat": 52.3852,
+    "lng": 4.8791,
+    "transcript": "The north entrance of Westerpark by the railway is unlit and feels really cut off. I walk the long way around now.",
+    "type": "environmental",
+    "severity": "low",
+    "summary": "Westerpark north entrance felt unlit and cut off",
+    "hours_ago": 16
+  },
+  {
+    "lat": 52.3848,
+    "lng": 4.8786,
+    "transcript": "A man jumped out from behind the bushes at Westerpark north and laughed when I screamed. He didn't follow but I haven't gone back.",
+    "type": "acute",
+    "severity": "high",
+    "summary": "Man jumped from bushes at Westerpark north entrance",
+    "hours_ago": 50
+  },
+  {
+    "lat": 52.3856,
+    "lng": 4.8798,
+    "transcript": "Westerpark north has good intentions, terrible execution. Half the path lights are out.",
+    "type": "environmental",
+    "severity": "low",
+    "summary": "Westerpark north path lights mostly out",
+    "hours_ago": 65
+  },
+  {
+    "lat": 52.3392,
+    "lng": 4.8723,
+    "transcript": "South side of Zuidas after office hours is empty in a way that doesn't feel safe — long sightlines but no one to call to.",
+    "type": "environmental",
+    "severity": "low",
+    "summary": "Zuidas south flank felt empty and isolating after hours",
+    "hours_ago": 12
+  },
+  {
+    "lat": 52.3387,
+    "lng": 4.8718,
+    "transcript": "A man on a scooter circled me twice on the Zuidas pedestrian path before riding off. Didn't say anything, just stared.",
+    "type": "acute",
+    "severity": "medium",
+    "summary": "Man on a scooter circled a pedestrian on Zuidas",
+    "hours_ago": 38
+  },
+  {
+    "lat": 52.3398,
+    "lng": 4.8729,
+    "transcript": "All the glass towers and no eyes on the street — Zuidas at 11pm could be a different city.",
+    "type": "environmental",
+    "severity": "low",
+    "summary": "Zuidas felt deserted with no eyes on the street",
+    "hours_ago": 58
+  },
+  {
+    "lat": 52.4082,
+    "lng": 4.8253,
+    "transcript": "Cycling home through the Westhaven, no one around for kilometers, only trucks. A car slowed beside me until I turned into a side street.",
+    "type": "acute",
+    "severity": "high",
+    "summary": "Car slowed alongside a cyclist in Westhaven",
+    "hours_ago": 7
+  },
+  {
+    "lat": 52.4078,
+    "lng": 4.8246,
+    "transcript": "Westhaven is just an industrial wasteland at night. Streetlights every 200 meters, no shops, nothing.",
+    "type": "environmental",
+    "severity": "low",
+    "summary": "Westhaven felt like an industrial wasteland at night",
+    "hours_ago": 32
+  },
+  {
+    "lat": 52.4087,
+    "lng": 4.8261,
+    "transcript": "Saw a group of men loading something into a van in Westhaven; they stopped and watched until I cycled past.",
+    "type": "environmental",
+    "severity": "medium",
+    "summary": "Men in Westhaven stopped loading a van to watch a passing cyclist",
+    "hours_ago": 55
+  },
+  {
+    "lat": 52.3753,
+    "lng": 4.8821,
+    "transcript": "The little canal stretch between Brouwersgracht and Bloemgracht in the Jordaan is gorgeous in daylight, eerie at 1am. No bars, no foot traffic.",
+    "type": "environmental",
+    "severity": "low",
+    "summary": "Quiet Jordaan canals felt eerie after midnight",
+    "hours_ago": 20
+  },
+  {
+    "lat": 52.3748,
+    "lng": 4.8815,
+    "transcript": "A man stepped out from a doorway on a Jordaan canal and asked for a cigarette, then walked behind me for a block.",
+    "type": "acute",
+    "severity": "medium",
+    "summary": "Man asked for a cigarette and trailed a woman in the Jordaan",
+    "hours_ago": 42
+  },
+  {
+    "lat": 52.3759,
+    "lng": 4.8828,
+    "transcript": "The narrow bridges in the Jordaan have no railings, no lights. If anything happened there'd be no way out.",
+    "type": "environmental",
+    "severity": "low",
+    "summary": "Narrow Jordaan bridges have no lights or escape route",
+    "hours_ago": 67
+  },
+  {
+    "lat": 52.3573,
+    "lng": 4.8762,
+    "transcript": "The south entrance of Vondelpark by the Amstelveenseweg is so dark — the trees block all the streetlight.",
+    "type": "environmental",
+    "severity": "medium",
+    "summary": "Vondelpark south entrance felt dark under tree cover",
+    "hours_ago": 13
+  },
+  {
+    "lat": 52.3568,
+    "lng": 4.8757,
+    "transcript": "Jogger ran past me in the south end of Vondelpark, then doubled back. Ran with me for a minute before turning off.",
+    "type": "acute",
+    "severity": "medium",
+    "summary": "Jogger doubled back and followed a woman in Vondelpark south",
+    "hours_ago": 35
+  },
+  {
+    "lat": 52.3578,
+    "lng": 4.8768,
+    "transcript": "Vondelpark south is fine in summer but in November the path is pitch black. I cycle on the road around it.",
+    "type": "environmental",
+    "severity": "low",
+    "summary": "Vondelpark south path goes pitch black in winter",
+    "hours_ago": 70
+  },
+  {
+    "lat": 52.3592,
+    "lng": 4.9281,
+    "transcript": "Oosterpark, west gate, after 11pm: a man followed me along the inside of the fence until I left through the next gate.",
+    "type": "acute",
+    "severity": "high",
+    "summary": "Man followed a woman along Oosterpark fence after 11pm",
+    "hours_ago": 6
+  },
+  {
+    "lat": 52.3587,
+    "lng": 4.9275,
+    "transcript": "Lights in the southern half of Oosterpark have been out for weeks. Reported it twice to the gemeente, nothing.",
+    "type": "environmental",
+    "severity": "medium",
+    "summary": "Oosterpark south lights out for weeks despite reports",
+    "hours_ago": 29
+  },
+  {
+    "lat": 52.3596,
+    "lng": 4.9286,
+    "transcript": "Heard yelling and what sounded like a fight near the Oosterpark playground around 10pm. Police drove past slow but didn't stop.",
+    "type": "acute",
+    "severity": "medium",
+    "summary": "Yelling and possible fight near Oosterpark playground",
+    "hours_ago": 52
+  },
+  {
+    "lat": 52.3805,
+    "lng": 4.8854,
+    "transcript": "Brouwersgracht underpass near the railway is one of those spots that looks fine on Google Maps but in person feels claustrophobic.",
+    "type": "environmental",
+    "severity": "medium",
+    "summary": "Brouwersgracht railway underpass felt claustrophobic",
+    "hours_ago": 17
+  },
+  {
+    "lat": 52.3712,
+    "lng": 4.8869,
+    "transcript": "Underpass at Singel near the Torensluis: a man was waiting at the far end, just watching. Turned and went around the long way.",
+    "type": "environmental",
+    "severity": "medium",
+    "summary": "Man stood watching at the Singel underpass exit",
+    "hours_ago": 39
+  },
+  {
+    "lat": 52.3678,
+    "lng": 4.8896,
+    "transcript": "Cycled under Herengracht bridge at 2am and someone whistled from the dark side. No one was visible. Kept moving.",
+    "type": "acute",
+    "severity": "medium",
+    "summary": "Whistling from the dark under a Herengracht bridge",
+    "hours_ago": 62
+  },
+  {
+    "lat": 52.3795,
+    "lng": 4.9012,
+    "transcript": "Centraal east tunnel exit had two men loitering near the bike racks. Made a show of locking my bike fast and got out.",
+    "type": "environmental",
+    "severity": "medium",
+    "summary": "Men loitering at Centraal east tunnel bike racks",
+    "hours_ago": 21
+  },
+  {
+    "lat": 52.3115,
+    "lng": 4.9472,
+    "transcript": "Bijlmer parking garage stairwell smells like urine and the door to the lower level didn't close. Ran up.",
+    "type": "environmental",
+    "severity": "medium",
+    "summary": "Bijlmer parking garage stairwell broken and unsafe",
+    "hours_ago": 44
+  }
+]
