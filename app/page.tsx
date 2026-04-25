@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { HomeScreen } from '@/components/screens/home';
 import { ReportScreen } from '@/components/screens/report';
 import { RouteScreen } from '@/components/screens/route';
@@ -43,6 +43,15 @@ export default function Page() {
     activePrompt: null,
   });
 
+  // Counts only when the user actually answers a prompt (yes/no), not on skip.
+  // Lifted here so PromptOverlay's onCounted can increment the cap that
+  // NavigateScreen reads from inside its poll-loop.
+  const promptCountRef = useRef(0);
+
+  // Report IDs filed from this device this session — never re-prompt them.
+  // Spec §7: "Skip own reports entirely."
+  const ownReportIdsRef = useRef<Set<string>>(new Set());
+
   const [pos, setPos] = useState<Coord | null>(null);
   useEffect(() => {
     if (typeof navigator === 'undefined' || !('geolocation' in navigator)) return;
@@ -61,6 +70,10 @@ export default function Page() {
     setState((s) => ({ ...s, routes, activeRouteId: routes[0]?.id ?? null }));
   }, []);
 
+  const setMode = useCallback((mode: 'walking' | 'cycling') => {
+    setState((s) => ({ ...s, mode }));
+  }, []);
+
   return (
     <main className="fixed inset-0 overflow-hidden bg-[var(--paper)]">
       {state.screen === 'home' && (
@@ -77,12 +90,18 @@ export default function Page() {
           onReport={() => goto('report')}
         />
       )}
-      {state.screen === 'report' && <ReportScreen onDone={() => goto('home')} />}
+      {state.screen === 'report' && (
+        <ReportScreen
+          onDone={() => goto('home')}
+          onReported={(id) => ownReportIdsRef.current.add(id)}
+        />
+      )}
       {state.screen === 'route' && state.origin && state.destination && (
         <RouteScreen
           origin={state.origin}
           destination={state.destination}
           mode={state.mode}
+          onModeChange={setMode}
           routes={state.routes}
           setRoutes={setRoutes}
           onStart={(activeRouteId) => setState((s) => ({ ...s, activeRouteId, screen: 'navigate' }))}
@@ -97,6 +116,8 @@ export default function Page() {
             mode={state.mode}
             routes={state.routes}
             activeRouteId={state.activeRouteId}
+            promptCountRef={promptCountRef}
+            ownReportIdsRef={ownReportIdsRef}
             onArrive={() => goto('arrive')}
             onCancel={() => goto('home')}
             onPromptOpen={(r) => setState((s) => ({ ...s, activePrompt: r }))}
@@ -109,7 +130,9 @@ export default function Page() {
               report={state.activePrompt}
               position={state.origin}
               onClose={() => setState((s) => ({ ...s, activePrompt: null }))}
-              onCounted={() => { /* count is tracked inside NavigateScreen on prompt open */ }}
+              onCounted={() => {
+                promptCountRef.current += 1;
+              }}
             />
           )}
         </>

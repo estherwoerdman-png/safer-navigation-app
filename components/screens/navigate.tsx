@@ -1,10 +1,11 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type MutableRefObject } from 'react';
 import type { Map as MbMap } from 'mapbox-gl';
 import { MapView } from '@/components/map/map-view';
 import { ReportPins, type Pin } from '@/components/map/report-pins';
 import { RouteLine } from '@/components/map/route-line';
+import { UserLocationDot } from '@/components/map/user-location-dot';
 import { getVoice } from '@/lib/voice';
 import type { Coord, RouteResponse } from '@/app/page';
 
@@ -18,6 +19,8 @@ export function NavigateScreen({
   mode,
   routes,
   activeRouteId,
+  promptCountRef,
+  ownReportIdsRef,
   onArrive,
   onCancel,
   onPromptOpen,
@@ -28,6 +31,8 @@ export function NavigateScreen({
   mode: 'walking' | 'cycling';
   routes: RouteResponse[];
   activeRouteId: string;
+  promptCountRef: MutableRefObject<number>;
+  ownReportIdsRef: MutableRefObject<Set<string>>;
   onArrive: () => void;
   onCancel: () => void;
   onPromptOpen: (report: NearReport) => void;
@@ -38,19 +43,36 @@ export function NavigateScreen({
   const [pins, setPins] = useState<Pin[]>([]);
   const lastRerouteAt = useRef(0);
   const promptedIds = useRef<Set<string>>(new Set());
-  const promptCountThisRoute = useRef(0);
   const lastPromptAt = useRef(0);
+  // Timestamp when we first entered the 30m arrival radius; 0 means not in radius.
+  // Spec §7.5: only fire onArrive after 5 consecutive seconds inside.
+  const arrivalDwellSince = useRef(0);
 
   useEffect(() => {
-    promptCountThisRoute.current = 0;
+    promptCountRef.current = 0;
     lastPromptAt.current = 0;
     promptedIds.current.clear();
-  }, [activeRouteId]);
+    arrivalDwellSince.current = 0;
+  }, [activeRouteId, promptCountRef]);
 
   useEffect(() => {
     if (!('geolocation' in navigator)) return;
+    // Spec §7: ignore positions whose accuracy >50m or whose delta from
+    // the last accepted reading implies >100 m/s (GPS jitter / teleports).
+    let lastAccepted: { lat: number; lng: number; t: number } | null = null;
     const id = navigator.geolocation.watchPosition(
-      (g) => setPos({ lat: g.coords.latitude, lng: g.coords.longitude }),
+      (g) => {
+        if (g.coords.accuracy > 50) return;
+        const next = { lat: g.coords.latitude, lng: g.coords.longitude };
+        const now = Date.now();
+        if (lastAccepted) {
+          const dist = haversine(lastAccepted, next);
+          const dt = (now - lastAccepted.t) / 1000;
+          if (dt > 0 && dist / dt > 100) return;
+        }
+        lastAccepted = { ...next, t: now };
+        setPos(next);
+      },
       () => {},
       { enableHighAccuracy: true, maximumAge: 2000, timeout: 10_000 },
     );
@@ -62,12 +84,18 @@ export function NavigateScreen({
     const tick = async () => {
       const dToDest = haversine(pos, destination);
       if (dToDest < 30) {
-        onArrive();
-        return;
+        if (arrivalDwellSince.current === 0) {
+          arrivalDwellSince.current = Date.now();
+        } else if (Date.now() - arrivalDwellSince.current >= 5_000) {
+          onArrive();
+          return;
+        }
+      } else {
+        arrivalDwellSince.current = 0;
       }
 
       const sinceLastPrompt = Date.now() - lastPromptAt.current;
-      if (promptCountThisRoute.current < 2 && sinceLastPrompt > 60_000) {
+      if (promptCountRef.current < 2 && sinceLastPrompt > 60_000) {
         const nearbyResp = await fetch(
           `/api/reports/near?lat=${pos.lat}&lng=${pos.lng}&radius=50`,
         )
@@ -76,7 +104,8 @@ export function NavigateScreen({
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const eligible = (nearbyResp.reports ?? []).filter(
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (r: any) => !promptedIds.current.has(r.id),
+          (r: any) =>
+            !promptedIds.current.has(r.id) && !ownReportIdsRef.current.has(r.id),
         );
         if (eligible.length > 0) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -85,9 +114,11 @@ export function NavigateScreen({
             (a: any, b: any) =>
               severityWeight(b.severity, b.type) - severityWeight(a.severity, a.type),
           )[0];
+          // Mark as prompted so we don't re-fire on the same report next tick.
+          // The cap counter is only bumped if the user actually answers
+          // (PromptOverlay -> onCounted in app/page.tsx).
           promptedIds.current.add(r.id);
           lastPromptAt.current = Date.now();
-          promptCountThisRoute.current += 1;
           onPromptOpen(r);
         }
       }
@@ -116,15 +147,37 @@ export function NavigateScreen({
         }
       }
     };
-    const id = setInterval(tick, POLL_MS);
-    tick();
-    return () => clearInterval(id);
+    // Spec §7: pause poll when tab is hidden (iOS Safari kills setInterval
+    // anyway, but doing it explicitly prevents stale fetches on resume).
+    let intervalId: ReturnType<typeof setInterval> | null = null;
+    const start = () => {
+      if (intervalId !== null) return;
+      intervalId = setInterval(tick, POLL_MS);
+      tick();
+    };
+    const stop = () => {
+      if (intervalId === null) return;
+      clearInterval(intervalId);
+      intervalId = null;
+    };
+    const onVisibility = () => {
+      if (document.hidden) stop();
+      else start();
+    };
+    document.addEventListener('visibilitychange', onVisibility);
+    if (!document.hidden) start();
+    return () => {
+      stop();
+      document.removeEventListener('visibilitychange', onVisibility);
+    };
   }, [
     pos,
     destination,
     mode,
     routes,
     activeRouteId,
+    promptCountRef,
+    ownReportIdsRef,
     onArrive,
     onPromptOpen,
     onActiveRouteChange,
@@ -163,17 +216,21 @@ export function NavigateScreen({
     <div className="absolute inset-0">
       <MapView className="absolute inset-0" onReady={setMap} />
       <ReportPins map={map} pins={pins} />
-      <RouteLine map={map} routes={drawn} />
+      <RouteLine map={map} routes={drawn} mode={mode} />
+      <UserLocationDot map={map} position={pos} />
 
       <div
         className="absolute top-3 left-3 right-3 bg-white/95 rounded-2xl px-4 py-3
                       shadow-md flex items-center justify-between backdrop-blur"
       >
         <div>
-          <div className="display text-base text-[var(--ink)]">
-            {active?.duration_min ?? '—'} min
+          <div className="flex items-baseline gap-1.5">
+            <span className="display text-2xl text-[var(--ink)] leading-none">
+              {active?.duration_min ?? '—'}
+            </span>
+            <span className="text-sm text-[var(--ink-3)]">min</span>
           </div>
-          <div className="text-xs text-[var(--ink-3)]">
+          <div className="text-xs text-[var(--ink-3)] mt-1">
             safety score {active?.safety_score.toFixed(2) ?? '—'}
           </div>
         </div>

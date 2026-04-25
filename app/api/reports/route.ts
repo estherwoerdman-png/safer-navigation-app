@@ -34,6 +34,15 @@ export async function POST(req: NextRequest) {
 
   const cls = await classifyReport(transcript);
 
+  if (cls.type === 'irrelevant') {
+    // Don't store; tell the user kindly. Rate-limit slot already consumed,
+    // which is fine — protects from spam-classifying random text.
+    return NextResponse.json(
+      { accepted: false, reason: cls.reason },
+      { status: 200 },
+    );
+  }
+
   const inserted = await db.execute(sql`
     INSERT INTO reports (location, transcript, type, severity, summary, source)
     VALUES (
@@ -48,6 +57,8 @@ export async function POST(req: NextRequest) {
   `);
 
   return NextResponse.json({
+    accepted: true,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     id: (inserted as any).rows[0].id,
     type: cls.type,
     severity: cls.severity,

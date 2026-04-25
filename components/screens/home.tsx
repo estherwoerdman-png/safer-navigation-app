@@ -4,6 +4,11 @@ import { useEffect, useState } from 'react';
 import type { Map as MbMap } from 'mapbox-gl';
 import { MapView } from '@/components/map/map-view';
 import { ReportPins, type Pin } from '@/components/map/report-pins';
+import { UserLocationDot } from '@/components/map/user-location-dot';
+import { SearchField } from '@/components/ui/search-field';
+import { ReportsNearbyBadge } from '@/components/ui/reports-nearby-badge';
+import { ReportDetailSheet } from '@/components/ui/report-detail-sheet';
+import type { NearReport } from '@/components/screens/navigate';
 import type { Coord } from '@/app/page';
 
 export function HomeScreen({
@@ -16,9 +21,10 @@ export function HomeScreen({
   initialPosition: Coord | null;
 }) {
   const [map, setMap] = useState<MbMap | null>(null);
-  const [pins, setPins] = useState<Pin[]>([]);
+  const [reports, setReports] = useState<NearReport[]>([]);
   const [destinationText, setDestinationText] = useState('');
   const [nearbyCount, setNearbyCount] = useState<number | null>(null);
+  const [clickedReportId, setClickedReportId] = useState<string | null>(null);
 
   useEffect(() => {
     const center = initialPosition ?? { lat: 52.3676, lng: 4.9041 };
@@ -27,13 +33,15 @@ export function HomeScreen({
       .then((data) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const list = (data.reports ?? []) as any[];
-        setPins(
+        setReports(
           list.map((r) => ({
             id: r.id,
             lat: Number(r.lat),
             lng: Number(r.lng),
             severity: r.severity,
             type: r.type,
+            summary: r.summary,
+            reported_at: r.reported_at,
           })),
         );
         const recent = list.filter(
@@ -46,8 +54,33 @@ export function HomeScreen({
       });
   }, [initialPosition]);
 
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const pins: Pin[] = reports.map((r) => ({
+    id: r.id,
+    lat: r.lat,
+    lng: r.lng,
+    severity: r.severity,
+    type: r.type,
+  }));
+  const clickedReport = clickedReportId
+    ? reports.find((r) => r.id === clickedReportId) ?? null
+    : null;
+
+  const onAnswer = async (agree: boolean | null) => {
+    if (clickedReport && agree !== null) {
+      await fetch('/api/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          report_id: clickedReport.id,
+          agree,
+          responder_loc: initialPosition ?? { lat: 52.3676, lng: 4.9041 },
+        }),
+      }).catch(() => { /* DB not ready */ });
+    }
+    setClickedReportId(null);
+  };
+
+  const onSearchSubmit = async () => {
     if (!destinationText.trim()) return;
     const r = await fetch(
       `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(destinationText)}.json` +
@@ -64,26 +97,20 @@ export function HomeScreen({
   return (
     <div className="absolute inset-0">
       <MapView className="absolute inset-0" onReady={setMap} />
-      <ReportPins map={map} pins={pins} />
+      <ReportPins map={map} pins={pins} onPinClick={setClickedReportId} />
+      <UserLocationDot map={map} position={initialPosition} />
 
-      <form
-        onSubmit={onSubmit}
-        className="absolute top-3 left-3 right-3 bg-white/95 rounded-2xl px-4 py-3
-                   shadow-md flex items-center gap-3 backdrop-blur"
-      >
-        <span className="opacity-60">⌕</span>
-        <input
+      <div className="absolute top-3 left-3 right-3">
+        <SearchField
           value={destinationText}
-          onChange={(e) => setDestinationText(e.target.value)}
-          placeholder="Where to?"
-          className="flex-1 outline-none bg-transparent text-[var(--ink)] placeholder:text-[var(--ink-4)]"
+          onChange={setDestinationText}
+          onSubmit={onSearchSubmit}
         />
-      </form>
+      </div>
 
-      {nearbyCount !== null && nearbyCount > 0 && (
-        <div className="absolute top-[64px] left-4 text-xs text-[var(--ink-3)]">
-          <span className="inline-block w-2 h-2 rounded-full bg-[var(--sev-acute)] mr-2 align-middle" />
-          <strong>{nearbyCount} reports nearby</strong> in the last hour
+      {nearbyCount !== null && (
+        <div className="absolute top-[64px] left-4">
+          <ReportsNearbyBadge count={nearbyCount} />
         </div>
       )}
 
@@ -94,14 +121,37 @@ export function HomeScreen({
                      shadow-lg active:scale-[0.99] transition-transform"
         >
           <div className="flex items-center gap-3">
-            <span className="text-xl">🎤</span>
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="shrink-0"
+              aria-hidden="true"
+            >
+              <rect x="9" y="2" width="6" height="13" rx="3" />
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+              <path d="M12 19v3" />
+            </svg>
             <div className="leading-tight">
-              <div className="display text-base">Report what you see</div>
-              <div className="text-xs opacity-80">Hold to speak — anonymous</div>
+              <div className="display text-lg">Report what you see</div>
+              <div className="text-sm opacity-80">Hold to speak — anonymous</div>
             </div>
           </div>
         </button>
       </div>
+
+      {clickedReport && (
+        <ReportDetailSheet
+          report={clickedReport}
+          onAnswer={onAnswer}
+          onDismiss={() => setClickedReportId(null)}
+        />
+      )}
     </div>
   );
 }

@@ -2,7 +2,7 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import type { Map as MbMap } from 'mapbox-gl';
 
 export type Pin = {
@@ -26,7 +26,22 @@ function resolveVar(name: string): string {
 const SOURCE_ID = 'reports-src';
 const LAYER_ID = 'reports-layer';
 
-export function ReportPins({ map, pins }: { map: MbMap | null; pins: Pin[] }) {
+export function ReportPins({
+  map,
+  pins,
+  onPinClick,
+}: {
+  map: MbMap | null;
+  pins: Pin[];
+  onPinClick?: (id: string) => void;
+}) {
+  // Keep latest callback in a ref so the click handler (registered once)
+  // always calls the current version without re-binding.
+  const onPinClickRef = useRef(onPinClick);
+  useEffect(() => {
+    onPinClickRef.current = onPinClick;
+  }, [onPinClick]);
+
   useEffect(() => {
     if (!map) return;
     const features = {
@@ -35,6 +50,7 @@ export function ReportPins({ map, pins }: { map: MbMap | null; pins: Pin[] }) {
         type: 'Feature',
         geometry: { type: 'Point', coordinates: [p.lng, p.lat] },
         properties: {
+          id: p.id,
           color:
             p.type === 'acute'
               ? resolveVar('--sev-acute')
@@ -58,6 +74,17 @@ export function ReportPins({ map, pins }: { map: MbMap | null; pins: Pin[] }) {
           'circle-stroke-color': '#fff',
           'circle-stroke-width': 1,
         },
+      });
+
+      map.on('click', LAYER_ID, (e: any) => {
+        const id = e.features?.[0]?.properties?.id;
+        if (id) onPinClickRef.current?.(id);
+      });
+      map.on('mouseenter', LAYER_ID, () => {
+        map.getCanvas().style.cursor = 'pointer';
+      });
+      map.on('mouseleave', LAYER_ID, () => {
+        map.getCanvas().style.cursor = '';
       });
     }
   }, [map, pins]);
