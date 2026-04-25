@@ -7,6 +7,37 @@ import mapboxgl, { type Map as MbMap } from 'mapbox-gl';
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!;
 
+function readVar(name: string): string {
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+
+function applyMapPalette(map: MbMap) {
+  const land = readVar('--map-land');
+  const water = readVar('--map-water');
+  const park = readVar('--map-park');
+  const bridge = readVar('--map-bridge');
+  const roadEdge = readVar('--map-road-edge');
+
+  for (const layer of map.getStyle()?.layers ?? []) {
+    const { id, type } = layer;
+    try {
+      if (type === 'background') {
+        map.setPaintProperty(id, 'background-color', land);
+      } else if (type === 'fill' && /water/i.test(id)) {
+        map.setPaintProperty(id, 'fill-color', water);
+      } else if (type === 'fill' && /(park|landuse|pitch|grass|wood)/i.test(id)) {
+        map.setPaintProperty(id, 'fill-color', park);
+      } else if (type === 'line' && /^bridge/i.test(id)) {
+        map.setPaintProperty(id, 'line-color', bridge);
+      } else if (type === 'line' && /^road/i.test(id) && /case/i.test(id)) {
+        map.setPaintProperty(id, 'line-color', roadEdge);
+      }
+    } catch {
+      // Some layers may not accept the property; skip silently.
+    }
+  }
+}
+
 const AMSTERDAM_CENTER: [number, number] = [4.9041, 52.3676];
 
 export function MapView({
@@ -31,9 +62,7 @@ export function MapView({
     mapRef.current = m;
 
     m.on('style.load', () => {
-      // Paint overrides removed — light-v11 has different layer IDs than the
-      // older streets-v8 style. The default light-v11 is already close to the
-      // cream palette. Stretch goal: author a custom Mapbox Studio style.
+      applyMapPalette(m);
       onReady?.(m);
     });
 
