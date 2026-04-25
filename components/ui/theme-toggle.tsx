@@ -13,13 +13,14 @@ export function ThemeToggle() {
 
   const toggle = () => {
     const next = theme === 'dark' ? 'light' : 'dark';
-    document.documentElement.dataset.theme = next;
     try {
       localStorage.setItem('theme', next);
     } catch {
       /* private mode etc */
     }
-    setTheme(next);
+    // Full reload so Mapbox can pick up the new style (light-v11 vs dark-v11);
+    // setting the attribute alone only swaps CSS tokens, leaving the map mismatched.
+    window.location.reload();
   };
 
   const isDark = theme === 'dark';
