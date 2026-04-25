@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { HomeScreen } from '@/components/screens/home';
+import { ReportScreen } from '@/components/screens/report';
 
 type Screen = 'home' | 'report' | 'route' | 'navigate' | 'arrive';
 
@@ -66,9 +67,7 @@ export default function Page() {
           onReport={() => goto('report')}
         />
       )}
-      {state.screen === 'report' && (
-        <ReportStub onDone={() => goto('home')} />
-      )}
+      {state.screen === 'report' && <ReportScreen onDone={() => goto('home')} />}
       {state.screen === 'route' && (
         <RouteStub onStart={() => goto('navigate')} onCancel={() => goto('home')} />
       )}
@@ -82,9 +81,6 @@ export default function Page() {
   );
 }
 
-function ReportStub({ onDone }: { onDone: () => void }) {
-  return <button className="m-6 underline" onClick={onDone}>Report stub — back</button>;
-}
 function RouteStub({ onStart, onCancel }: { onStart: () => void; onCancel: () => void }) {
   return (
     <div className="p-6">
