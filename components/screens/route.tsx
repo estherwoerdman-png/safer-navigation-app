@@ -75,7 +75,7 @@ export function RouteScreen({
     <div className="absolute inset-0">
       <MapView className="absolute inset-0" onReady={setMap} />
       <ReportPins map={map} pins={pins} />
-      <RouteLine map={map} routes={drawn} />
+      <RouteLine map={map} routes={drawn} mode={mode} />
       <UserLocationDot map={map} position={origin} />
 
       <BottomSheet>
@@ -161,7 +161,13 @@ export function RouteScreen({
                 className="flex-1 py-3 rounded-xl bg-[var(--paper-2)] text-[var(--ink)]">
                 Cancel
               </button>
-              <button onClick={() => active && onStart(active.id)}
+              <button
+                onClick={async () => {
+                  if (!active) return;
+                  const v = await getVoice();
+                  v.speak(`Starting your route. ${active.duration_min} minutes. Stay aware.`);
+                  onStart(active.id);
+                }}
                 className="flex-[2] py-3 rounded-xl bg-[var(--primary)] text-white display">
                 Start
               </button>

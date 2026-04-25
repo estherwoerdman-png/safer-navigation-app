@@ -164,7 +164,7 @@ export function NavigateScreen({
     <div className="absolute inset-0">
       <MapView className="absolute inset-0" onReady={setMap} />
       <ReportPins map={map} pins={pins} />
-      <RouteLine map={map} routes={drawn} />
+      <RouteLine map={map} routes={drawn} mode={mode} />
       <UserLocationDot map={map} position={pos} />
 
       <div

@@ -18,9 +18,18 @@ function resolveVar(name: string) {
   return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 }
 
-export function RouteLine({ map, routes }: { map: MbMap | null; routes: DrawnRoute[] }) {
+export function RouteLine({
+  map,
+  routes,
+  mode,
+}: {
+  map: MbMap | null;
+  routes: DrawnRoute[];
+  mode: 'walking' | 'cycling';
+}) {
   useEffect(() => {
     if (!map) return;
+    const dashPattern = mode === 'walking' ? [0.5, 1.5] : [2, 1];
 
     const colorByRank = (rank: number) =>
       rank === 0
@@ -59,11 +68,12 @@ export function RouteLine({ map, routes }: { map: MbMap | null; routes: DrawnRou
           'line-color': r.active ? colorByRank(r.rank) : inactiveColor,
           'line-width': r.active ? 7 : 4,
           'line-opacity': r.active ? 1 : 0.4,
+          'line-dasharray': dashPattern,
         },
         layout: { 'line-cap': 'round', 'line-join': 'round' },
       });
     }
-  }, [map, routes]);
+  }, [map, routes, mode]);
 
   return null;
 }
