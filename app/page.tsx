@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { HomeScreen } from '@/components/screens/home';
 import { ReportScreen } from '@/components/screens/report';
+import { RouteScreen } from '@/components/screens/route';
 
 type Screen = 'home' | 'report' | 'route' | 'navigate' | 'arrive';
 
@@ -51,6 +52,10 @@ export default function Page() {
     setState((s) => ({ ...s, screen }));
   }, []);
 
+  const setRoutes = useCallback((routes: RouteResponse[]) => {
+    setState((s) => ({ ...s, routes, activeRouteId: routes[0]?.id ?? null }));
+  }, []);
+
   return (
     <main className="fixed inset-0 overflow-hidden bg-[var(--paper)]">
       {state.screen === 'home' && (
@@ -68,8 +73,16 @@ export default function Page() {
         />
       )}
       {state.screen === 'report' && <ReportScreen onDone={() => goto('home')} />}
-      {state.screen === 'route' && (
-        <RouteStub onStart={() => goto('navigate')} onCancel={() => goto('home')} />
+      {state.screen === 'route' && state.origin && state.destination && (
+        <RouteScreen
+          origin={state.origin}
+          destination={state.destination}
+          mode={state.mode}
+          routes={state.routes}
+          setRoutes={setRoutes}
+          onStart={(activeRouteId) => setState((s) => ({ ...s, activeRouteId, screen: 'navigate' }))}
+          onCancel={() => goto('home')}
+        />
       )}
       {state.screen === 'navigate' && (
         <NavigateStub onArrive={() => goto('arrive')} onCancel={() => goto('home')} />
@@ -81,15 +94,6 @@ export default function Page() {
   );
 }
 
-function RouteStub({ onStart, onCancel }: { onStart: () => void; onCancel: () => void }) {
-  return (
-    <div className="p-6">
-      <h1 className="display text-2xl">Route (stub)</h1>
-      <button className="m-2 underline" onClick={onStart}>Start</button>
-      <button className="m-2 underline" onClick={onCancel}>Cancel</button>
-    </div>
-  );
-}
 function NavigateStub({ onArrive, onCancel }: { onArrive: () => void; onCancel: () => void }) {
   return (
     <div className="p-6">
