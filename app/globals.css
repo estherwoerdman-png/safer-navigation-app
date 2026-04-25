@@ -1,6 +1,7 @@
 /* app/globals.css */
 @import "tailwindcss";
 @import "./styles/tokens.css";
+@import "mapbox-gl/dist/mapbox-gl.css";
 
 @theme inline {
   --color-background: var(--paper);
