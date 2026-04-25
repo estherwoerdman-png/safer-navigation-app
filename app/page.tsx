@@ -7,6 +7,8 @@ import { RouteScreen } from '@/components/screens/route';
 import { NavigateScreen, type NearReport } from '@/components/screens/navigate';
 import { PromptOverlay } from '@/components/screens/prompt';
 import { ArriveScreen } from '@/components/screens/arrive';
+import { EmergencyButton } from '@/components/ui/emergency-button';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 type Screen = 'home' | 'report' | 'route' | 'navigate' | 'arrive';
 
@@ -76,6 +78,8 @@ export default function Page() {
 
   return (
     <main className="fixed inset-0 overflow-hidden bg-[var(--paper)]">
+      <ThemeToggle />
+      <EmergencyButton />
       {state.screen === 'home' && (
         <HomeScreen
           initialPosition={pos}

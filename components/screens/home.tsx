@@ -100,7 +100,7 @@ export function HomeScreen({
       <ReportPins map={map} pins={pins} onPinClick={setClickedReportId} />
       <UserLocationDot map={map} position={initialPosition} />
 
-      <div className="absolute top-3 left-3 right-3">
+      <div className="absolute top-3 left-16 right-16">
         <SearchField
           value={destinationText}
           onChange={setDestinationText}
