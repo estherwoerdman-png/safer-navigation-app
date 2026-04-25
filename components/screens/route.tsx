@@ -142,6 +142,9 @@ export function RouteScreen({
                 min · {(active.distance_m / 1000).toFixed(1)} km
               </span>
             </div>
+            <p className="text-sm text-[var(--ink-3)] mt-1">
+              Arrive at {new Date(Date.now() + active.duration_min * 60_000).toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' })}
+            </p>
             <ul className="text-sm text-[var(--ink-2)] mt-3 space-y-1">
               {active.reasons.map((r, i) => <li key={i}>· {r}</li>)}
             </ul>

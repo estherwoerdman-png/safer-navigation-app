@@ -230,8 +230,11 @@ export function NavigateScreen({
             </span>
             <span className="text-sm text-[var(--ink-3)]">min</span>
           </div>
-          <div className="text-xs text-[var(--ink-3)] mt-1">
-            safety score {active?.safety_score.toFixed(2) ?? '—'}
+          <div className="text-sm text-[var(--ink-3)] mt-1">
+            Arrive at {active ? new Date(Date.now() + active.duration_min * 60_000).toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' }) : '—'}
+          </div>
+          <div className="text-xs text-[var(--ink-4)] mt-0.5">
+            safety {active?.safety_score.toFixed(2) ?? '—'}
           </div>
         </div>
         <button onClick={onCancel} className="text-[var(--sev-acute)] text-sm">
