@@ -6,6 +6,8 @@ import { MapView } from '@/components/map/map-view';
 import { ReportPins, type Pin } from '@/components/map/report-pins';
 import { SearchField } from '@/components/ui/search-field';
 import { ReportsNearbyBadge } from '@/components/ui/reports-nearby-badge';
+import { ReportDetailSheet } from '@/components/ui/report-detail-sheet';
+import type { NearReport } from '@/components/screens/navigate';
 import type { Coord } from '@/app/page';
 
 export function HomeScreen({
@@ -18,9 +20,10 @@ export function HomeScreen({
   initialPosition: Coord | null;
 }) {
   const [map, setMap] = useState<MbMap | null>(null);
-  const [pins, setPins] = useState<Pin[]>([]);
+  const [reports, setReports] = useState<NearReport[]>([]);
   const [destinationText, setDestinationText] = useState('');
   const [nearbyCount, setNearbyCount] = useState<number | null>(null);
+  const [clickedReportId, setClickedReportId] = useState<string | null>(null);
 
   useEffect(() => {
     const center = initialPosition ?? { lat: 52.3676, lng: 4.9041 };
@@ -29,13 +32,15 @@ export function HomeScreen({
       .then((data) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const list = (data.reports ?? []) as any[];
-        setPins(
+        setReports(
           list.map((r) => ({
             id: r.id,
             lat: Number(r.lat),
             lng: Number(r.lng),
             severity: r.severity,
             type: r.type,
+            summary: r.summary,
+            reported_at: r.reported_at,
           })),
         );
         const recent = list.filter(
@@ -47,6 +52,32 @@ export function HomeScreen({
         /* DB not ready, render gracefully */
       });
   }, [initialPosition]);
+
+  const pins: Pin[] = reports.map((r) => ({
+    id: r.id,
+    lat: r.lat,
+    lng: r.lng,
+    severity: r.severity,
+    type: r.type,
+  }));
+  const clickedReport = clickedReportId
+    ? reports.find((r) => r.id === clickedReportId) ?? null
+    : null;
+
+  const onAnswer = async (agree: boolean | null) => {
+    if (clickedReport && agree !== null) {
+      await fetch('/api/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          report_id: clickedReport.id,
+          agree,
+          responder_loc: initialPosition ?? { lat: 52.3676, lng: 4.9041 },
+        }),
+      }).catch(() => { /* DB not ready */ });
+    }
+    setClickedReportId(null);
+  };
 
   const onSearchSubmit = async () => {
     if (!destinationText.trim()) return;
@@ -65,7 +96,7 @@ export function HomeScreen({
   return (
     <div className="absolute inset-0">
       <MapView className="absolute inset-0" onReady={setMap} />
-      <ReportPins map={map} pins={pins} />
+      <ReportPins map={map} pins={pins} onPinClick={setClickedReportId} />
 
       <div className="absolute top-3 left-3 right-3">
         <SearchField
@@ -111,6 +142,14 @@ export function HomeScreen({
           </div>
         </button>
       </div>
+
+      {clickedReport && (
+        <ReportDetailSheet
+          report={clickedReport}
+          onAnswer={onAnswer}
+          onDismiss={() => setClickedReportId(null)}
+        />
+      )}
     </div>
   );
 }
